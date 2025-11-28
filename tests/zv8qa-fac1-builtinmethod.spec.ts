@@ -13,7 +13,7 @@ test('Test builtin methods on page and locator', async ({ page }) => {
     if(initialPageTitle.includes('Privacy error')) 
     {
         const connectionStatus = page.getByText('Your connection is not private');
-    
+      //MEET
         if (await connectionStatus.isVisible()) 
         {
         await page.click('button:has-text("Advanced")');
