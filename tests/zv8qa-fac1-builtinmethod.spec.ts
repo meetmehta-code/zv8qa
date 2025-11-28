@@ -2,13 +2,13 @@ import { test, expect, Locator } from '@playwright/test';
 import { Network, NetworkResources } from 'inspector/promises';
 import { networkInterfaces } from 'os';
 
-test('Test builtin methods on page and locator', async ({ page }) => {
+test('Login into ZV8QA', async ({ page }) => {
   
-  //Lauch ZV8QA webpage
-    await page.goto('https://zodiacappdp2.zv8.zodiac-cloud.com/zodiac/um/auth');
+    //Lauch ZV8QA webpage
+    await page.goto('https://zodiacappqa.zv8.zodiac-cloud.com/zodiac/um/auth');
     await page.waitForLoadState('networkidle');
 
-  //Handle SSL certificate error page
+    //Handle SSL certificate error page
     const initialPageTitle = await page.title();
     if(initialPageTitle.includes('Privacy error')) 
     {
@@ -35,40 +35,27 @@ test('Test builtin methods on page and locator', async ({ page }) => {
     
 
   //Assert the hearder name
-    expect(pageTitle).toBe('');
-    
-
-  console.log("Built-in methods on Page and Locator are working fine.");
+    console.log(pageTitle);
+    expect(page).toHaveTitle(" ");
+    console.log("Built-in methods on Page and Locator are working fine.");
 
   //Sign-In functionality
-        
-        await page.locator("//*[@id='user-id']").click();
-        
-        const username : Locator = page.getByLabel('User ID');
-        await username.fill('meet');
+        await page.locator('#user-id').fill('meet');
+        await page.locator('#password').fill('Welcome@14');
+        //await page.locator('button:has-text("Sign In")').click(); 
+        await page.getByRole('button', { name: 'Sign In' }).first().click();
 
-
-
-
-        
-        const password = page.getByRole('textbox', { name: 'password' });
-        await password.fill('Welcome@14');
-
-        //await page.getByLabel('User ID').fill('meet');
-        //await page.getByLabel('Password').fill('Welcome@14');
-        
-        const signinbutton = page.getByRole('button', { name: 'submit' });   
-        await signinbutton.click();
         await page.waitForLoadState('networkidle');
         
-        await expect(page).toHaveURL('https://zodiacappqa.zv8.zodiac-cloud.com/zodiac/um/home');
+        await expect(page).toHaveURL('https://zodiacappqa.zv8.zodiac-cloud.com/zodiac/ui/home');
         await expect(page).toHaveTitle('Home');
 
+});
 
-
-
-
-
-
-  
+test("Select Facility", async ({page}) => {
+    //Select Facility after login
+    await page.locator('//*[@id="root"]/div[2]/div[1]/div[2]/div/div[2]/div[1]').click();
+    await page.locator('text=FAC1').click();
+    await page.waitForLoadState('networkidle');
+    await expect(page).toHaveURL('https://zodiacappqa.zv8.zodiac-cloud.com/zodiac/ui/dashboard');
 });
